@@ -14,11 +14,11 @@ import java.util.List;
 @Data
 public class BookRecordVO {
 
-    // 柱装图list
-    List<Integer> barList;
-    // 圆饼图list
-    List<BigDecimal> cirList;
-
+    // 柱装图list-> 该类所售数量
+    List<BarVO> barList;
+    // 圆饼图list-> 该类售书金额
+    List<CirVO> cirList;
+    // 7天的top（时间数量）
     List<BookTopVO> bookTopVOList;
 
     // 一周的时间数组

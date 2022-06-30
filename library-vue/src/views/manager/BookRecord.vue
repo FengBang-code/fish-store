@@ -95,11 +95,17 @@ export default {
       this.$http.get("/api/order/getRecord").then(
           res => {
             // console.log(res.data.data)
-            this.barData.series[0].data =  res.data.data.barList
+            // this.barData.series[0].data =  res.data.data.barList
+            for(let i = 0; i < res.data.data.barList.length; i++) {
+              this.barData.xAxis.data[i] = res.data.data.barList[i].type
+              this.barData.series[0].data[i] = res.data.data.barList[i].bookNum
+            }
             // console.log(this.barData.series[0].data)
             for(let i = 0; i < res.data.data.cirList.length; i++) {
                 // this.cirData.series[i].value = res.data.data.cirList[i]
-              this.cirData.series[0].data[i].value = res.data.data.cirList[i]
+              this.cirData.series[0].data[i].value = res.data.data.cirList[i].bookPrice
+              this.cirData.series[0].data[i].name = res.data.data.cirList[i].type
+
               // console.log(res.data.data.cirList[i])
               console.log("============")
               // console.log(this.cirData.series[0].data[i].value)

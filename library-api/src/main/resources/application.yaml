@@ -35,3 +35,7 @@ yutang:
     header: Authorization
     expire: 604800 #7天，秒单位
     secret: fengzhuoxingshidashuaige13okokok
+
+logging:
+  level:
+    com.yutang: debug

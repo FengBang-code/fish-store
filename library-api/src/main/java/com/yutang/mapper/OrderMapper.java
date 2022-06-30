@@ -26,7 +26,7 @@ public interface OrderMapper extends BaseMapper<Order> {
     @Select("select * from `order` where del_flag = '0'")
     List<Order> getOrders();
 
-    @Select("select * from `order` where create_time between #{begin} and #{end}")
+    @Select("select * from `order` where create_time between #{begin} and #{end} and del_flag = '0'")
     List<Order> getOrdersByTime(@Param("begin")String begin, @Param("end")String end);
 
 }

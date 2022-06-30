@@ -5,8 +5,10 @@ import com.yutang.entity.Book;
 import com.yutang.entity.Customer;
 import com.yutang.entity.Order;
 import com.yutang.mapper.OrderMapper;
+import com.yutang.model.background.BarVO;
 import com.yutang.model.background.BookRecordVO;
 import com.yutang.model.background.BookTopVO;
+import com.yutang.model.background.CirVO;
 import com.yutang.model.foreground.PurchaseBooksDTO;
 import com.yutang.service.BookService;
 import com.yutang.service.OrderService;
@@ -163,7 +165,7 @@ public class Order_Service {
                 Integer num = bookNums.get(i);
                 BigDecimal price = bookValue.get(bookIds.get(i)).multiply(new BigDecimal(num.toString()));
                 barMap.put(type, barMap.get(bookType.get(bookIds.get(i))) + num);
-                priceMap.put(type, price);
+                priceMap.put(type, priceMap.get(bookType.get(bookIds.get(i))).add(price));
             }
 
 //            bookIds.forEach(id -> {
@@ -177,20 +179,43 @@ public class Order_Service {
             e.printStackTrace();
         }
 
-        List<Integer> barList = new ArrayList<>();
+        List<BarVO> barList = new ArrayList<>();
         barMap.forEach((k,v) -> {
-            barList.add(v);
+            BarVO barVO = new BarVO();
+            if(k.equals("小说"))
+                barVO.setType("小说");
+            else if(k.equals("世界名著"))
+                barVO.setType("世界名著");
+            else if(k.equals("工具书"))
+                barVO.setType("工具书");
+            else if(k.equals("教科书"))
+                barVO.setType("教科书");
+            else
+                barVO.setType("随笔");
+            barVO.setBookNum(v);
+            barList.add(barVO);
         });
-        List<BigDecimal> price = new ArrayList<>();
+        List<CirVO> price = new ArrayList<>();
         priceMap.forEach((k,v) -> {
-            price.add(v);
+            CirVO cirVO = new CirVO();
+            if(k.equals("小说"))
+                cirVO.setType("小说");
+            else if(k.equals("世界名著"))
+                cirVO.setType("世界名著");
+            else if(k.equals("工具书"))
+                cirVO.setType("工具书");
+            else if(k.equals("教科书"))
+                cirVO.setType("教科书");
+            else
+                cirVO.setType("随笔");
+            cirVO.setBookPrice(v);
+            price.add(cirVO);
         });
         vo.setBarList(barList);
         vo.setCirList(price);
 
         // 找出top5的书本【一周内】
-        List<Order> orders = getBookTop();
-        orders.forEach(model -> {
+        orderList.forEach(model -> {
             String[] split = model.getBookIds().split(",");
             for (String s : split) {
                 String[] split1 = s.split("-");
@@ -222,6 +247,7 @@ public class Order_Service {
         return vo;
     }
 
+
     /**
      * 获取本周内的订单
      * @return
@@ -232,6 +258,7 @@ public class Order_Service {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
+        calendar.add(Calendar.DAY_OF_WEEK, 1);
         date = calendar.getTime();
         String begin = df.format(date);
         SimpleDateFormat df1 = new SimpleDateFormat("YYYY-MM-dd 23:59:59");
