@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yutang.mapper.CustomerMapper">
+    <update id="updateCustomer">
+        update customer set
+        <if test="model.phone != null">phone = #{model.phone},</if>
+        <if test="model.address != null">address = #{model.address}</if>
+        where id = #{model.id}
+    </update>
+</mapper>

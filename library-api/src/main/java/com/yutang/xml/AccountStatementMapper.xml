@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yutang.mapper.AccountStatementMapper">
+
+    <select id="queryAccount" resultType="AccountQueryVO">
+        select id, account_num, order_num,A.cus_num, A.cus_name,account_amount,account_remark,pay_type,create_time,phone,del_flag from account_statement as A
+        right join (select distinct phone as phone, cus_num from customer
+        <where>
+            <if test="model.phone != null">
+                phone like concat('%',#{model.phone},'%')
+            </if>
+            and del_flag = '0'
+        </where>)
+            as B on A.cus_num = B.cus_num
+        <where>
+            <if test="model.accountNum != null">
+                account_num like concat('%',#{model.accountNum},'%')
+            </if>
+            <if test="model.orderNum != null">
+                and order_num like concat('%',#{model.orderNum},'%')
+            </if>
+            <if test="model.cusName != null">
+                and A.cus_name like concat('%',#{model.cusName},'%')
+            </if>
+            <if test="model.payType != null">
+                and pay_type = #{model.payType}
+            </if>
+            <if test="model.begin != null">
+                and create_time >= #{model.begin}
+            </if>
+            <if test="model.end != null">
+                and create_time &lt;= #{model.end}
+            </if>
+            and del_flag = '0'
+        </where>
+        order by create_time desc limit #{model.pageSize} offset #{offsetNum}
+    </select>
+
+    <update id="updateAccount">
+        update account_statement
+        <set>
+            <if test="model.payType != null">
+                pay_type = #{model.payType},
+            </if>
+            <if test="model.accountRemark != null">
+                account_remark = #{model.accountRemark}
+            </if>
+        </set>
+        where id = #{model.id}
+    </update>
+</mapper>

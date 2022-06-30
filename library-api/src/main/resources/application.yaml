@@ -1,0 +1,37 @@
+server:
+  port: 8001
+
+spring:
+  datasource:
+    ### mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/sys_library?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://fzhuoxing.work:3306/sys_library?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: fengzhuoxing
+#    username: root
+#    password: 123456
+    ### springSecurity
+#  security:
+#    user:
+#      name: a
+#      password: a
+  redis:
+    host: fzhuoxing.work
+    port: 6379
+mybatis-plus:
+  mapper-locations: classpath*:com/yutang/xml/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-not-delete-value: '0'
+      logic-delete-value: '1'
+  type-aliases-package: com.yutang.model
+
+### jwt设置 ###
+yutang:
+  jwt:
+    header: Authorization
+    expire: 604800 #7天，秒单位
+    secret: fengzhuoxingshidashuaige13okokok
